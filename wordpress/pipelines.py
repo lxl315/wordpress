@@ -5,14 +5,9 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from scrapy.exceptions import DropItem
-import json
+from wordpress import post
 class WordpressPipeline(object):
-    # wb = workbook.Workbook()
-    # ws = wb.active
-    # ws.append(['title','img','header','content'])
-    def __init__(self):
-        f=open('items.txt', 'w',encoding='utf-8')
-        self.file =f
+
 
 
     def process_item(self, item, spider):
@@ -24,8 +19,6 @@ class WordpressPipeline(object):
         elif not item['content']:
             raise DropItem("Duplicate item found: %s" % item)
         else :
-
-            line = json.dumps(dict(item),indent=2,ensure_ascii=False)+'\n'
-            self.file.write(line)
+            post.autoPost(item['img'],item['title'],item['header'],item['tag'],item['content'],item['download'])
             return item
 

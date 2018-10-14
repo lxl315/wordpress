@@ -32,7 +32,9 @@ class BaiduSpider(scrapy.Spider):
         item = WordpressItem()
         item['title'] = response.css('h1 a::text').extract_first()
         item['img'] = response.xpath('//*[@id="mbm-book-page"]/span/img/@src').extract_first()
-        item['content'] = response.xpath('//*[@id="mbm-book-page"]').re('<span class="mbm-book-excerpt-label">(.*?)</div>')
+        result= response.xpath('//*[@id="mbm-book-page"]')
+        if result:
+            item['content']= result.re('<span class="mbm-book-excerpt-label">(.*?)</div>')[0]
         item['tag'] = response.css('.mbm-book-tag-text::text').extract()
         bookInfo = response.css('.mbm-book-details-outer div').extract_first()
         if bookInfo:
