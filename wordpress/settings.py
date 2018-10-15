@@ -40,9 +40,8 @@ ROBOTSTXT_OBEY = True
 
 # Override the default request headers:
 DEFAULT_REQUEST_HEADERS = {
-  'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 SE 2.X MetaSr 1.0',
+    'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 SE 2.X MetaSr 1.0',
     'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'Host':'bookset.me',
     'Cookie':'_ga=GA1.2.532825224.1538916786; _gid=GA1.2.323.1538916786; \
      Hm_lvt_867e9077558c759606bf5c053a75de22=1538983452,1538983233474,2323232,\
      1538983498; Hm_lpvt_867e9077558c759606bf5c053a75de22=123234',

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import scrapy,re
+import scrapy
 from scrapy import Request
 from wordpress.items import WordpressItem
 
 
 class BaiduSpider(scrapy.Spider):
-    name = 'wordpress'
+    name = 'bookset'
     allowed_domains = ['bookset.me']
     start_urls = ['https://bookset.me/page/120']
 

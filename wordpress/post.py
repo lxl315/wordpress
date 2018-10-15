@@ -3,7 +3,7 @@ from wordpress_xmlrpc import Client, WordPressPost
 from wordpress_xmlrpc.compat import xmlrpc_client
 from wordpress_xmlrpc.methods import media, posts
 import requests,time
-wp = Client('http://119.29.224.210/xmlrpc.php', 'xxx', 'xxx')
+wp = Client('http://booksduo.com/xmlrpc.php', xxx,xxx) #改成自己的wordpress 后台密码
 # response == {
 #       'id': 6,
 #       'file': 'picture.jpg'
@@ -42,13 +42,14 @@ wp = Client('http://119.29.224.210/xmlrpc.php', 'xxx', 'xxx')
 
 
 
-def autoPost(image,title,header,tags,content,download):
+def autoPost(image,title,tags,content,download,**kw):
     """
     文章发布方法
     :param image: 文章内要上传的图片
     :param title:文章标题
     :param tags:文章标签
     :param content:文章内容
+    :param **kw:自定义的字段
     :return:
     """
     html =requests.get(image)
@@ -65,13 +66,15 @@ def autoPost(image,title,header,tags,content,download):
         data['bits'] = xmlrpc_client.Binary(img.read())
     response = wp.call(media.UploadFile(data))
     #attachment_id = response['id']
-
+    header= ''
+    if 'header' in kw:
+        header = kw['header']
     post = WordPressPost()
     post.title = title
     url = response['url']
     post.content = '<img class="size-medium wp-image-203 alignleft" src='+url+' width="240" height="300" />'+header+'</br>'+content+download
 
-    post.post_status = 'draft'  # 文章状态，不写默认是草稿，private表示私密的，draft表示草稿，publish表示发布
+    post.post_status = 'publish'  # 文章状态，不写默认是草稿，private表示私密的，draft表示草稿，publish表示发布
     post.terms_names = {
         'post_tag': tags  # 文章所属标签，没有则自动创建
         # 文章所属分类，没有则自动创建

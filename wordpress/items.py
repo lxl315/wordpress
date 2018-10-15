@@ -10,13 +10,23 @@ import scrapy
 
 class WordpressItem(scrapy.Item):
     """
+    bookset爬虫对应的 item
     定义要保存的字段
     """
-    # define the fields for your item here like:
-    # name = scrapy.Field()
     title = scrapy.Field()
     content = scrapy.Field()
     tag = scrapy.Field()
     img = scrapy.Field()
     header = scrapy.Field()
+    download = scrapy.Field()
+
+class MeBookItem(scrapy.Item):
+    """
+    mebook爬虫对应的 item
+    定义要保存的字段
+    """
+    title = scrapy.Field()
+    content = scrapy.Field()
+    tag = scrapy.Field()
+    img = scrapy.Field()
     download = scrapy.Field()
