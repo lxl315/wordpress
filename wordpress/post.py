@@ -3,7 +3,14 @@ from wordpress_xmlrpc import Client, WordPressPost
 from wordpress_xmlrpc.compat import xmlrpc_client
 from wordpress_xmlrpc.methods import media, posts
 import requests,time
-wp = Client('http://booksduo.com/xmlrpc.php', xxx,xxx) #改成自己的wordpress 后台密码
+from qiniu import Auth
+from qiniu import BucketManager
+access_key = '6jHNSsT-HGgJuLb4oAo8-1PJJrlW2DbT6Aj87nuT'
+secret_key = 'NJrh9eoAAu6lrxLmF5RTUWuz1F-Z7Wy6dA9Ou0WL'
+bucket_name = 'xxxx'
+q = Auth(access_key, secret_key)
+bucket = BucketManager(q)
+wp = Client('http://booksduo.com/xmlrpc.php', 'XXXX', 'XXXX') #改成自己的wordpress 后台密码
 # response == {
 #       'id': 6,
 #       'file': 'picture.jpg'
@@ -52,27 +59,31 @@ def autoPost(image,title,tags,content,download,**kw):
     :param **kw:自定义的字段
     :return:
     """
-    html =requests.get(image)
-    imgFile = str(int(time.time()))+'.jpg'
-    with open(imgFile,'wb') as file:
-        file.write(html.content)
+    url = image
+    key = image.split('/')[-1]
+    ret, info = bucket.fetch(url, bucket_name, key)
+    imgsurl = 'http://static.lxlob.com/'+key
 
-    filename = './'+imgFile  # 上传的图片文件路径
-    data = {
-        'name': imgFile,
-        'type': 'image/jpeg',  # mimetype
-    }
-    with open(filename, 'rb') as img:
-        data['bits'] = xmlrpc_client.Binary(img.read())
-    response = wp.call(media.UploadFile(data))
+    # html =requests.get(image)  #本地下载图片并上传 自己的wordpress 网站中
+    # imgFile = str(int(time.time()))+'.jpg'
+    # with open(imgFile,'wb') as file:
+    #     file.write(html.content)
+    #
+    # filename = './'+imgFile  # 上传的图片文件路径
+    # data = {
+    #     'name': imgFile,
+    #     'type': 'image/jpeg',  # mimetype
+    # }
+    # with open(filename, 'rb') as img:
+    #     data['bits'] = xmlrpc_client.Binary(img.read())
+    # response = wp.call(media.UploadFile(data))
     #attachment_id = response['id']
     header= ''
     if 'header' in kw:
         header = kw['header']
     post = WordPressPost()
     post.title = title
-    url = response['url']
-    post.content = '<img class="size-medium wp-image-203 alignleft" src='+url+' width="240" height="300" />'+header+'</br>'+content+download
+    post.content = '<img class="size-medium wp-image-203 alignleft" src='+imgsurl+' width="240" height="300" />'+header+'</br>'+content+download
 
     post.post_status = 'publish'  # 文章状态，不写默认是草稿，private表示私密的，draft表示草稿，publish表示发布
     post.terms_names = {
