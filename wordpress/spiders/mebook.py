@@ -9,10 +9,14 @@ from wordpress.items import MeBookItem
 class MebookSpider(scrapy.Spider):
     name = 'mebook'
     allowed_domains = ['mebook.cc']
-    start_urls =[] #因为页面没有下一页，懒得写正则表达判断下一页，写个循环生成 start_url
-    for i in range(10,19):
-        start_urls.append('http://mebook.cc/page/'+str(i))
 
+    def start_requests(self):
+        pages = []
+        for i in range(501, 768):
+            url = 'http://mebook.cc/page/%s' % i
+            page = scrapy.Request(url)
+            pages.append(page)
+        return pages
 
     def parse(self, response):
         """
